@@ -1,0 +1,32 @@
+pipeline {
+    agent any
+  tools {
+  maven 'maven-version3'
+}
+        stages {
+        stage('Code checkout stage') {
+            steps {
+                git branch: 'FoodAppBackEnd-deploy01', credentialsId: 'cbad9476-032e-426e-9d17-ddeeb9f0f5cb', url: 'https://git-codecommit.us-east-1.amazonaws.com/v1/repos/foodAppBackEndDevOps'
+            }
+        }
+       stage('build stage') {
+            steps {
+                
+            sh 'mvn clean package -DskipTests=true'
+            }
+        } 
+               // stage('sonar stage') {
+            //steps {
+            //withSonarQubeEnv('sonar8') {
+            //sh 'mvn -DskipTests=true sonar:sonar'
+            //}
+        //} 
+               // }
+        stage('deployment stage') {
+            steps {
+                sh 'cd /var/lib/jenkins/workspace/FoodApp-BackEnd java -jar foodApp-0.0.1-SNAPSHOT.jar'
+            //sh 'java -jar foodApp-0.0.1-SNAPSHOT.jar'
+            }
+        } 
+    }
+}
